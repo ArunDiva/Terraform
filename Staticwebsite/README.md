@@ -5,7 +5,7 @@ In this project, I developed a streamlined infrastructure for hosting a static w
 
 ## Overview:
 
-![s3](https://github.com/mathesh-me/static-website-host-1/assets/144098846/ab68ff80-7841-4674-9b3c-ceac0710a39b)
+![s3](https://github.com/ArunDiva/Terraform/tree/main/Staticwebsite)
 
 
 ## Key Components and Features:
@@ -24,7 +24,7 @@ I provided instructions and scripts for uploading and managing my website conten
 1. Basic knowledge of AWS services and concepts.
 2. Familiarity with Terraform and infrastructure as code principles.
 3. An AWS account with appropriate permissions.
-4. An IDE of your Choice , I would suggest VS Code Editor .
+4. An IDE of your choice, I would suggest VS Code Editor.
 5. This project serves as an excellent foundation for hosting various types of static websites, including personal blogs, portfolio sites, or small business websites.
 
 
@@ -63,8 +63,8 @@ Running `terraform init` will install the necessary plugins and modules required
 4. And then define __resource.tf__ file for creating bucket by using the below code :
 
 ```
-resource "aws_s3_bucket" "bucket1" {
-    bucket = "web-bucket-mathesh"
+resource "aws_s3_bucket" "arun-static-bucket" {
+    bucket = "arun-static-bucket"
   
 }
 ```
@@ -75,8 +75,8 @@ terraform apply -auto-approve
 ```
 6. And then add the below codes in __resource.tf__ file :
 ```
-resource "aws_s3_bucket_public_access_block" "bucket1" {
-  bucket = aws_s3_bucket.bucket1.id
+resource "aws_s3_bucket_public_access_block" "arun-static-bucket" {
+  bucket = aws_s3_bucket.arun-static-bucket.id
 
   block_public_acls       = false
   block_public_policy     = false
@@ -85,22 +85,22 @@ resource "aws_s3_bucket_public_access_block" "bucket1" {
 }
 
 resource "aws_s3_object" "index" {
-  bucket = "web-bucket-mathesh"
+  bucket = "arun-static-bucket"
   key    = "index.html"
   source = "index.html"
   content_type = "text/html"
 }
 
 resource "aws_s3_object" "error" {
-  bucket = "web-bucket-mathesh"
+  bucket = "arun-static-bucket"
   key    = "error.html"
   source = "error.html"
   content_type = "text/html"
 }
 
 
-resource "aws_s3_bucket_website_configuration" "bucket1" {
-  bucket = aws_s3_bucket.bucket1.id
+resource "aws_s3_bucket_website_configuration" "arun-static-bucket" {
+  bucket = aws_s3_bucket.arun-static-bucket.id
 
   index_document {
     suffix = "index.html"
@@ -113,19 +113,18 @@ resource "aws_s3_bucket_website_configuration" "bucket1" {
 }
 
 resource "aws_s3_bucket_policy" "public_read_access" {
-  bucket = aws_s3_bucket.bucket1.id
-  policy = <<EOF
-{
+  bucket = aws_s3_bucket.arun-static-bucket.id
+  {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
       "Effect": "Allow",
-	  "Principal": "*",
-      "Action": [ "s3:GetObject" ],
-      "Resource": [
-        "${aws_s3_bucket.bucket1.arn}",
-        "${aws_s3_bucket.bucket1.arn}/*"
-      ]
+      "Principal": "*",
+      "Resource": "${aws_s3_bucket.arun-static-bucket.arn}/*"
     }
   ]
 }
@@ -136,7 +135,7 @@ EOF
 7. And then again run the command :
 
 ```
-terraform applyb -auto-approve
+terraform apply -auto-approve
 ```
 8. The code above will apply the necessary configurations for features such as static website hosting, bucket policies, and blocking public access to your bucket.
 9. Certainly, it's important to customize the code to your specific needs. Please remember to change the bucket name, region, and configurations as per your requirements when using the code from the Terraform documentation.
@@ -146,8 +145,8 @@ terraform applyb -auto-approve
 1. We use an output file to obtain your website link in your IDE, eliminating the need to access the link through the AWS Console.
 2. Define __output.tf__ file by using the below terraform code :
 ```
-output "websiteendpoint" {
-    value = aws_s3_bucket.bucket1.website_endpoint
+output "website endpoint" {
+    value = aws_s3_bucket.arun-static-bucket.website_endpoint
   
 }
 ```
@@ -158,13 +157,13 @@ terraform apply -auto-approve
 ```
 4. It will give your website link as output as shown below
 
-![s3](https://github.com/mathesh-me/static-website-host-1/assets/144098846/90551cc8-ed1e-45c3-91b1-ffcce24666e1)
+![s3](https://github.com/ArunDiva/Terraform/tree/main/Staticwebsite)
 
 ### Step 6: Verify the Output 
 
 Copy the link and paste it in your favourite browser.
 
-![s4](https://github.com/mathesh-me/static-website-host-1/assets/144098846/f1908092-afeb-427b-a129-cc291275f4ae)
+![s4](https://github.com/ArunDiva/Terraform/tree/main/Staticwebsite)
 
 
 
